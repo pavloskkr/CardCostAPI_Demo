@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cardcostapi-ingress
+  namespace: cardcostapi
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/rewrite-target: /
+spec:
+  tls:
+    - hosts:
+        - cardcostapi.rndv-testing.xyz
+      secretName: cardcostapi-tls
+  rules:
+    - host: cardcostapi.rndv-testing.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cardcostapi
+                port:
+                  number: 80
