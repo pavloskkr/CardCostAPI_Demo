@@ -18,6 +18,10 @@ public class ClearingCostService {
     }
 
     public void saveClearingCost(CardClearingCost ccc) {
+        // exclude the "Others" entry and validate for the ISO2 country codes
+        if (!"Others".equals(ccc.getCountryCode()) && !ccc.getCountryCode().matches("^[A-Z]{2}$")) {
+            throw new ValidationException("Country code must be a valid ISO2 code (two uppercase letters) or 'Others'");
+        }
         if (ccc.getClearingCost() < 0) {
             throw new ValidationException("Clearing cost can't be less than 0");
         }
